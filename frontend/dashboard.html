@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 40px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      width: 400px;
+      margin: auto;
+      border-radius: 10px;
+    }
+    input {
+      width: 75%;
+      padding: 10px;
+    }
+    button {
+      padding: 10px;
+      background: #28a745;
+      color: white;
+      border: none;
+    }
+    ul {
+      margin-top: 20px;
+    }
+    li {
+      background: #eee;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>My Tasks</h2>
+
+  <input id="task" placeholder="Enter task">
+  <button onclick="addTask()">Add</button>
+
+  <ul id="list"></ul>
+</div>
+
+<script>
+const userId = localStorage.getItem("userId");
+
+function addTask() {
+  fetch("http://localhost:3000/task", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      task: task.value,
+      user_id: userId
+    })
+  }).then(loadTasks);
+}
+
+function loadTasks() {
+  fetch("http://localhost:3000/tasks/" + userId)
+    .then(res => res.json())
+    .then(data => {
+      list.innerHTML = "";
+      data.forEach(t => {
+        list.innerHTML += "<li>" + t.task + "</li>";
+      });
+    });
+}
+
+loadTasks();
+</script>
+
+</body>
+</html>
